@@ -1,0 +1,38 @@
+{
+  "name": "@warrantdev/warrant-js",
+  "version": "0.0.1",
+  "description": "Warrant API Wrapper for JavaScript clients",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "/dist/**/*"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/warrant-dev/warrant-js.git"
+  },
+  "keywords": [
+    "warrant",
+    "authorization",
+    "rbac",
+    "role based access control",
+    "access control"
+  ],
+  "author": "Warrant <hello@warrant.dev> (https://warrant.dev)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/warrant-dev/warrant-js/issues"
+  },
+  "homepage": "https://github.com/warrant-dev/warrant-js#readme",
+  "dependencies": {
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "typescript": "^4.3.2"
+  }
+}
