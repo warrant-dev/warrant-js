@@ -1,16 +1,17 @@
 {
   "name": "@warrantdev/warrant-js",
   "version": "0.0.1",
-  "description": "Warrant API Wrapper for JavaScript clients",
+  "description": "JavaScript Library to Use Warrant in Client Applications",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "files": [
-    "/dist/**/*"
+    "/dist/**/*",
+    "README.md"
   ],
   "scripts": {
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "npm run build"
+    "build": "webpack --mode production --config webpack.config.js",
+    "prepare": "npm run build",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,10 @@
     "axios": "^0.21.1"
   },
   "devDependencies": {
-    "typescript": "^4.3.2"
+    "clean-webpack-plugin": "^4.0.0-alpha.0",
+    "ts-loader": "^9.2.3",
+    "typescript": "^4.3.4",
+    "webpack": "^5.41.1",
+    "webpack-cli": "^4.7.2"
   }
 }
