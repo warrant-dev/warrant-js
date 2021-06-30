@@ -17,9 +17,9 @@ export default class Client {
         })
     }
 
-    public async isAuthorized(warrantName: string): Promise<boolean> {
+    public async isAuthorized(permissionId: string): Promise<boolean> {
         try {
-            await this.httpClient.get(`/authorize/${warrantName}`);
+            await this.httpClient.get(`/authorize/${permissionId}`);
 
             return true;
         } catch (e) {

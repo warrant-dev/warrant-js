@@ -13,10 +13,10 @@ npm install @warrantdev/warrant-js
 ## Usage
 Import the Warrant client and pass your Client Key to the constructor to get started:
 ```js
-import {Client as WarrantClient} from "@warrantdev/warrant-js";
+import {Client as Warrant} from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
-const warrant = new WarrantClient('client_prod_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+const warrant = new Warrant('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 ```
 
 ### `isAuthorized(permissionId)`
@@ -27,13 +27,32 @@ This function returns a `Promise` that resolves with `true` if the user for the 
 import {Client as WarrantClient} from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
-const warrant = new WarrantClient('client_prod_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-if (warrant.isAuthorized("edit_stores")) {
+warrant
+    .isAuthorized("edit_stores")
+    .then((isAuthorized) => {
+        if (isAuthorized) {
+            // Carry out logic to allow user to edit a Store
+        }
+    });
+```
+Or using async/await:
+```js
+import {Client as WarrantClient} from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+
+//
+// Example Scenario:
+// An e-commerce website where Store Owners can edit their own Store's info
+//
+if (await warrant.isAuthorized("edit_stores")) {
     // Carry out logic to allow user to edit a Store
 }
 ```
