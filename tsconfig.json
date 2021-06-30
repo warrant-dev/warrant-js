@@ -1,12 +1,13 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
-        "esModuleInterop": true,
-        "target": "es6",
-        "declaration": true,
-        "noImplicitAny": true,
+        "target": "es5",
+        "module": "esnext",
+        "lib": ["es6"],
         "moduleResolution": "node",
-        "outDir": "dist",
+        "esModuleInterop": true,
+        "declaration": true,
+        "declarationDir": "dist",
+        "noImplicitAny": true,
     },
     "include": ["src"],
     "exclude": ["node_modules"]

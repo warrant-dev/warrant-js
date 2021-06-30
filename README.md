@@ -11,33 +11,54 @@ npm install @warrantdev/warrant-js
 ```
 
 ## Usage
-Import the Warrant client and pass your API key to the constructor to get started:
+Import the Warrant client and pass your Client Key to the constructor to get started:
 ```js
-import {Client as WarrantClient} from "@warrantdev/warrant-js";
+import {Client as Warrant} from "@warrantdev/warrant-js";
 
-const warrant = new WarrantClient('prod_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=');
+// A valid session token is required to initialize the Client
+const warrant = new Warrant('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 ```
 
-### `isAuthorized(userUUID, permissionName)`
+### `isAuthorized(permissionId)`
 
-This function returns a `Promise` that resolves with `true` if the user with the specified `userUUID` has been granted the permission with the specified `permissionName` and `false` otherwise.
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the permission with the specified `permissionId` and `false` otherwise.
 
 ```js
 import {Client as WarrantClient} from "@warrantdev/warrant-js";
 
-const warrant = new WarrantClient('prod_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=');
+// A valid session token is required to initialize the Client
+const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-if (warrant.isAuthorized(userSession.userId, "edit_stores")) {
+warrant
+    .isAuthorized("edit_stores")
+    .then((isAuthorized) => {
+        if (isAuthorized) {
+            // Carry out logic to allow user to edit a Store
+        }
+    });
+```
+Or using async/await:
+```js
+import {Client as WarrantClient} from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+
+//
+// Example Scenario:
+// An e-commerce website where Store Owners can edit their own Store's info
+//
+if (await warrant.isAuthorized("edit_stores")) {
     // Carry out logic to allow user to edit a Store
 }
 ```
 
-We’ve used a random API key in these code examples. Replace it with your
-[actual publishable API keys](https://app.warrant.dev) to
+We’ve used a random Client Key in these code examples. Replace it with your
+[actual publishable Client Key](https://app.warrant.dev) to
 test this code through your own Warrant account.
 
 For more information on how to use the Warrant API, please refer to the
