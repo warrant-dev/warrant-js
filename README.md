@@ -1,4 +1,4 @@
-# Warrant ES Module
+# @warrantdev/warrant-js
 
 Use [Warrant](https://warrant.dev/) as an ES module.
 
