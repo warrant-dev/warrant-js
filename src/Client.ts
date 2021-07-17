@@ -17,9 +17,13 @@ export default class Client {
         })
     }
 
-    public async isAuthorized(permissionId: string): Promise<boolean> {
+    public async isAuthorized(objectType: string, objectId: string, relation: string): Promise<boolean> {
         try {
-            await this.httpClient.get(`/authorize/${permissionId}`);
+            await this.httpClient.post("/sessions/authorize", {
+                objectType,
+                objectId,
+                relation,
+            });
 
             return true;
         } catch (e) {
