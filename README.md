@@ -13,18 +13,18 @@ npm install @warrantdev/warrant-js
 ## Usage
 Import the Warrant client and pass your Client Key to the constructor to get started:
 ```js
-import {Client as Warrant} from "@warrantdev/warrant-js";
+import { Client as Warrant } from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
 const warrant = new Warrant('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 ```
 
-### `isAuthorized(permissionId)`
+### `isAuthorized(objectType, objectId, relation)`
 
-This function returns a `Promise` that resolves with `true` if the user for the current session token has the permission with the specified `permissionId` and `false` otherwise.
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified `relation` on the object with id `objectId` of type `objectType` and `false` otherwise.
 
 ```js
-import {Client as WarrantClient} from "@warrantdev/warrant-js";
+import { Client as WarrantClient } from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
 const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
@@ -34,7 +34,7 @@ const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICb
 // An e-commerce website where Store Owners can edit their own Store's info
 //
 warrant
-    .isAuthorized("edit_stores")
+    .isAuthorized("store", storeId, "edit")
     .then((isAuthorized) => {
         if (isAuthorized) {
             // Carry out logic to allow user to edit a Store
@@ -43,7 +43,7 @@ warrant
 ```
 Or using async/await:
 ```js
-import {Client as WarrantClient} from "@warrantdev/warrant-js";
+import { Client as WarrantClient } from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
 const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
@@ -52,7 +52,7 @@ const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICb
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-if (await warrant.isAuthorized("edit_stores")) {
+if (await warrant.isAuthorized("store", storeId, "edit")) {
     // Carry out logic to allow user to edit a Store
 }
 ```
