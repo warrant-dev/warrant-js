@@ -2,6 +2,9 @@
 
 Use [Warrant](https://warrant.dev/) as an ES module.
 
+[![npm](https://img.shields.io/npm/v/@warrantdev/warrant-js)](https://www.npmjs.com/package/@warrantdev/warrant-js)
+[![Discord](https://img.shields.io/discord/865661082203193365?label=discord)](https://discord.gg/QNCMKWzqET)
+
 ## Installation
 
 Use `npm` to install the Warrant module:
