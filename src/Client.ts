@@ -1,5 +1,6 @@
 import Axios, { AxiosInstance } from "axios";
 import { API_URL_BASE, API_VERSION } from "./constants";
+import WarrantCheck from "./types/WarrantCheck";
 
 export default class Client {
     private clientKey: string;
@@ -17,15 +18,11 @@ export default class Client {
         })
     }
 
-    public async isAuthorized(objectType: string, objectId: string, relation: string): Promise<boolean> {
+    public async isAuthorized(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
-            await this.httpClient.post("/sessions/authorize", {
-                objectType,
-                objectId,
-                relation,
-            });
+            const response = await this.httpClient.post("/authorize", warrantCheck);
 
-            return true;
+            return response.data.result === "Authorized";
         } catch (e) {
             return false;
         }
