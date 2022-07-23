@@ -22,9 +22,9 @@ import { Client as Warrant } from "@warrantdev/warrant-js";
 const warrant = new Warrant('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
 ```
 
-### `isAuthorized(objectType, objectId, relation)`
+### `isAuthorized(warrantCheck)`
 
-This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified `relation` on the object with id `objectId` of type `objectType` and `false` otherwise.
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified `warrants` and `false` otherwise.
 
 ```js
 import { Client as WarrantClient } from "@warrantdev/warrant-js";
@@ -37,7 +37,13 @@ const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICb
 // An e-commerce website where Store Owners can edit their own Store's info
 //
 warrant
-    .isAuthorized("store", storeId, "edit")
+    .isAuthorized({
+        warrants: [{
+            objectType: "store",
+            objectId: storeId,
+            relation: "edit",
+        }]
+    })
     .then((isAuthorized) => {
         if (isAuthorized) {
             // Carry out logic to allow user to edit a Store
@@ -55,7 +61,14 @@ const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICb
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-if (await warrant.isAuthorized("store", storeId, "edit")) {
+const isAuthorized = await warrant.isAuthorized({
+    warrants: [{
+        objectType: "store",
+        objectId: storeId,
+        relation: "edit",
+    }]
+});
+if (isAuthorized) {
     // Carry out logic to allow user to edit a Store
 }
 ```
@@ -66,6 +79,30 @@ test this code through your own Warrant account.
 
 For more information on how to use the Warrant API, please refer to the
 [Warrant API reference](https://docs.warrant.dev).
+
+## Support for Multiple Warrants
+
+`warrants` contains the list of warrants evaluted to determine if the user has access. If `warrants` contains multiple warrants, the `op` parameter is required and specifies how the list of warrants should be evaluated.
+
+**anyOf** specifies that the access check request will be authorized if *any of* the warrants are matched and will not be authorized otherwise.
+
+**allOf** specifies that the access check request will be authorized if *all of* the warrants are matched and will not be authorized otherwise.
+
+```js
+// User is authorized if they are a 'viewer' of protected_info OR a 'viewer' of 'another_protected_info'
+const isAuthorized = await warrant.isAuthorized({
+    op: "anyOf",
+    warrants: [{
+        objectType: "info",
+        objectId: "protected_info",
+        relation: "viewer",
+    }, {
+        objectType: "info",
+        objectId: "another_protected_info",
+        relation: "viewer",
+    }]
+});
+```
 
 ## TypeScript support
 
