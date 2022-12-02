@@ -1,26 +1,23 @@
 import Axios, { AxiosInstance } from "axios";
-import { API_URL_BASE, API_VERSION } from "./constants";
+import { API_URL_BASE } from "./constants";
+import Config from "./types/Config";
 import WarrantCheck from "./types/WarrantCheck";
 
 export default class Client {
-    private clientKey: string;
-    private sessionToken: string;
     private httpClient: AxiosInstance;
 
-    constructor(clientKey: string, sessionToken: string) {
-        this.clientKey = clientKey;
-        this.sessionToken = sessionToken;
+    constructor(config: Config) {
         this.httpClient = Axios.create({
-            baseURL: `${API_URL_BASE}/${API_VERSION}`,
+            baseURL: config.endpoint || API_URL_BASE,
             headers: {
-                Authorization: `Bearer ${this.sessionToken}`,
+                Authorization: `Bearer ${config.sessionToken}`,
             },
         })
     }
 
     public async isAuthorized(warrantCheck: WarrantCheck): Promise<boolean> {
         try {
-            const response = await this.httpClient.post("/authorize", warrantCheck);
+            const response = await this.httpClient.post("/v2/authorize", warrantCheck);
 
             return response.data.result === "Authorized";
         } catch (e) {
