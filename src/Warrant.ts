@@ -4,6 +4,7 @@ import Feature from "./types/Feature";
 import Check, {
     CheckMany,
     CheckOp,
+    CheckWarrant,
     FeatureCheck,
     PermissionCheck,
 } from "./types/Check";
@@ -33,7 +34,9 @@ export default class Warrant {
                         objectId: check.object.getObjectId(),
                         relation: check.relation,
                         context: check.context,
-                    }]
+                    }],
+                    consistentRead: check.consistentRead,
+                    debug: check.debug,
                 },
             });
 
@@ -47,7 +50,17 @@ export default class Warrant {
         try {
             const response = await this.httpClient.post({
                 url: "/v2/authorize",
-                data: check,
+                data: {
+                    op: check.op,
+                    warrants: check.warrants.map((warrant: CheckWarrant) => ({
+                        objectType: warrant.object.getObjectType(),
+                        objectId: warrant.object.getObjectId(),
+                        relation: warrant.relation,
+                        context: warrant.context,
+                    })),
+                    consistentRead: check.consistentRead,
+                    debug: check.debug,
+                },
             });
             return response.data.result === "Authorized";
         } catch (e) {
