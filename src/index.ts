@@ -1,2 +1,4 @@
+import Warrant from "./Warrant";
+
 export * from "./types";
-export { default as Client } from "./Client";
+export default Warrant;
