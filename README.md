@@ -14,62 +14,207 @@ npm install @warrantdev/warrant-js
 ```
 
 ## Usage
-Import the Warrant client and pass your Client Key to the constructor to get started:
+
+Import the Warrant client and pass a valid Config object to the constructor to get started:
+
 ```js
-import { Client as Warrant } from "@warrantdev/warrant-js";
+import Warrant from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
-const warrant = new Warrant('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
 ```
 
-### `isAuthorized(warrantCheck)`
+### `check`
 
-This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified `warrants` and `false` otherwise.
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified `warrant` and `false` otherwise.
 
 ```js
-import { Client as WarrantClient } from "@warrantdev/warrant-js";
+import Warrant from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
-const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-warrant
-    .isAuthorized({
-        warrants: [{
-            objectType: "store",
-            objectId: storeId,
-            relation: "edit",
-        }]
-    })
-    .then((isAuthorized) => {
-        if (isAuthorized) {
-            // Carry out logic to allow user to edit a Store
-        }
-    });
+warrant.check({ object: myReport, relation: "editor" }).then((isAuthorized) => {
+  if (isAuthorized) {
+    // Carry out logic to allow user to edit a Store
+  }
+});
 ```
+
 Or using async/await:
+
 ```js
-import { Client as WarrantClient } from "@warrantdev/warrant-js";
+import Warrant from "@warrantdev/warrant-js";
 
 // A valid session token is required to initialize the Client
-const warrant = new WarrantClient('client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=', sessionToken);
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
 
 //
 // Example Scenario:
 // An e-commerce website where Store Owners can edit their own Store's info
 //
-const isAuthorized = await warrant.isAuthorized({
-    warrants: [{
-        objectType: "store",
-        objectId: storeId,
-        relation: "edit",
-    }]
+const isAuthorized = await warrant.check({
+  object: myReport,
+  relation: "editor",
 });
 if (isAuthorized) {
-    // Carry out logic to allow user to edit a Store
+  // Carry out logic to allow user to edit a Store
+}
+```
+
+### `checkMany`
+
+This function returns a `Promise` that resolves with `true` if the user for the current session token has `allOf` or `anyOf` (depending on the passed in `op`) the specified `warrants` and `false` otherwise.
+
+**CheckOp.AnyOf** specifies that the access check request will be authorized if _any of_ the warrants are matched and will not be authorized otherwise.
+
+**CheckOp.AllOf** specifies that the access check request will be authorized if _all of_ the warrants are matched and will not be authorized otherwise.
+
+```js
+import Warrant, { CheckOp } from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+warrant
+  .checkMany({
+    op: CheckOp.AllOf,
+    warrants: [
+      {
+        object: tenantA,
+        relation: "member",
+      },
+      {
+        object: reportA,
+        relation: "editor",
+      },
+    ],
+  })
+  .then((isAuthorized) => {
+    if (isAuthorized) {
+      // Carry out logic if user is member of tenantA AND editor of reportA
+    }
+  });
+```
+
+Or using async/await:
+
+```js
+import Warrant from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+const isAuthorized = await warrant.checkMany({
+  op: CheckOp.AllOf,
+  warrants: [
+    {
+      object: tenantA,
+      relation: "member",
+    },
+    {
+      object: reportA,
+      relation: "editor",
+    },
+  ],
+});
+if (isAuthorized) {
+  // Carry out logic if user is member of tenantA AND editor of reportA
+}
+```
+
+### `hasPermission`
+
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified permission and `false` otherwise.
+
+```js
+import Warrant from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+warrant.hasPermission({ permissionId: "view-items" }).then((canViewItems) => {
+  if (canViewItems) {
+    // Carry out logic if user has permission view-items
+  }
+});
+```
+
+Or using async/await:
+
+```js
+import Warrant from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+const canViewItems = await warrant.hasPermission({
+  permissionId: "view-items",
+});
+if (canViewItems) {
+  // Carry out logic if user has permission view-items
+}
+```
+
+### `hasFeature`
+
+This function returns a `Promise` that resolves with `true` if the user for the current session token has the specified feature and `false` otherwise.
+
+```js
+import Warrant from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+warrant.hasFeature({ featureId: "save-items" }).then((canSaveItems) => {
+  if (canSaveItems) {
+    // Carry out logic if user has feature save-items
+  }
+});
+```
+
+Or using async/await:
+
+```js
+import Warrant from "@warrantdev/warrant-js";
+
+// A valid session token is required to initialize the Client
+const warrant = new Warrant({
+  clientKey: "client_test_f5dsKVeYnVSLHGje44zAygqgqXiLJBICbFzCiAg1E=",
+  sessionToken: "sess_test_f9asdfASD90mkj2jXZIaeoqbIUAIjsJAHSAnsndW=",
+});
+
+const canSaveItems = await warrant.hasFeature({ featureId: "save-items" });
+if (canSaveItems) {
+  // Carry out logic if user has feature save-items
 }
 ```
 
@@ -79,30 +224,6 @@ test this code through your own Warrant account.
 
 For more information on how to use the Warrant API, please refer to the
 [Warrant API reference](https://docs.warrant.dev).
-
-## Support for Multiple Warrants
-
-`warrants` contains the list of warrants evaluted to determine if the user has access. If `warrants` contains multiple warrants, the `op` parameter is required and specifies how the list of warrants should be evaluated.
-
-**anyOf** specifies that the access check request will be authorized if *any of* the warrants are matched and will not be authorized otherwise.
-
-**allOf** specifies that the access check request will be authorized if *all of* the warrants are matched and will not be authorized otherwise.
-
-```js
-// User is authorized if they are a 'viewer' of protected_info OR a 'viewer' of 'another_protected_info'
-const isAuthorized = await warrant.isAuthorized({
-    op: "anyOf",
-    warrants: [{
-        objectType: "info",
-        objectId: "protected_info",
-        relation: "viewer",
-    }, {
-        objectType: "info",
-        objectId: "another_protected_info",
-        relation: "viewer",
-    }]
-});
-```
 
 ## TypeScript support
 
