@@ -1,5 +1,4 @@
-name: Warrant JS
-
+name: Build & Test
 on:
   push:
     branches: [master]
@@ -16,4 +15,4 @@ jobs:
       - name: Build
         run: |
           npm ci
-          npm run build
+          npm test
