@@ -77,7 +77,7 @@ if (isAuthorized) {
 
 ### `checkMany`
 
-This function returns a `Promise` that resolves with `true` if the user for the current session token has `allOf` or `anyOf` (dependending on the passed in `op`) the specified `warrants` and `false` otherwise.
+This function returns a `Promise` that resolves with `true` if the user for the current session token has `allOf` or `anyOf` (depending on the passed in `op`) the specified `warrants` and `false` otherwise.
 
 **CheckOp.AnyOf** specifies that the access check request will be authorized if _any of_ the warrants are matched and will not be authorized otherwise.
 
