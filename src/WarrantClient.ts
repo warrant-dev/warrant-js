@@ -11,7 +11,7 @@ import Check, {
 import Permission from "./types/Permission";
 import ApiClient from "./HttpClient";
 
-export default class Warrant {
+export default class WarrantClient {
     private readonly config: Config;
     private readonly httpClient: ApiClient;
 
@@ -24,48 +24,39 @@ export default class Warrant {
     }
 
     public async check(check: Check): Promise<boolean> {
-        try {
-            const response = await this.httpClient.post({
-                url: "/v2/authorize",
-                data: {
-                    op: CheckOp.AnyOf,
-                    warrants: [{
-                        objectType: check.object.getObjectType(),
-                        objectId: check.object.getObjectId(),
-                        relation: check.relation,
-                        context: check.context,
-                    }],
-                    consistentRead: check.consistentRead,
-                    debug: check.debug,
-                },
-            });
-
-            return response.data.result === "Authorized";
-        } catch (e) {
-            return false;
-        }
+        const response = await this.httpClient.post({
+            url: "/v2/authorize",
+            data: {
+                op: CheckOp.AnyOf,
+                warrants: [{
+                    objectType: check.object.getObjectType(),
+                    objectId: check.object.getObjectId(),
+                    relation: check.relation,
+                    context: check.context,
+                }],
+                consistentRead: check.consistentRead,
+                debug: check.debug,
+            },
+        });
+        return response.result === "Authorized";
     }
 
     public async checkMany(check: CheckMany): Promise<boolean> {
-        try {
-            const response = await this.httpClient.post({
-                url: "/v2/authorize",
-                data: {
-                    op: check.op,
-                    warrants: check.warrants.map((warrant: CheckWarrant) => ({
-                        objectType: warrant.object.getObjectType(),
-                        objectId: warrant.object.getObjectId(),
-                        relation: warrant.relation,
-                        context: warrant.context,
-                    })),
-                    consistentRead: check.consistentRead,
-                    debug: check.debug,
-                },
-            });
-            return response.data.result === "Authorized";
-        } catch (e) {
-            return false;
-        }
+        const response = await this.httpClient.post({
+            url: "/v2/authorize",
+            data: {
+                op: check.op,
+                warrants: check.warrants.map((warrant: CheckWarrant) => ({
+                    objectType: warrant.object.getObjectType(),
+                    objectId: warrant.object.getObjectId(),
+                    relation: warrant.relation,
+                    context: warrant.context,
+                })),
+                consistentRead: check.consistentRead,
+                debug: check.debug,
+            },
+        });
+        return response.result === "Authorized";
     }
 
     public async hasFeature(featureCheck: FeatureCheck): Promise<boolean> {
