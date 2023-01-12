@@ -6,7 +6,7 @@ var assert = require('assert');
 global.XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 
 // Remove .skip below and add your API_KEY and CLIENT_KEY to run the tests.
-describe('Live Test', function () {
+describe.skip('Live Test', function () {
     before(async function () {
         this.warrantClient = new WarrantNode.WarrantClient({ apiKey: "API_KEY" });
 
