@@ -1,5 +1,5 @@
 import Context from "./Context";
-import WarrantObject from "./WarrantObject";
+import WarrantObject, { WarrantObjectLiteral } from "./WarrantObject";
 
 export enum CheckOp {
     AllOf = "allOf",
@@ -7,7 +7,7 @@ export enum CheckOp {
 }
 
 export interface CheckWarrant {
-    object: WarrantObject;
+    object: WarrantObject | WarrantObjectLiteral;
     relation: string;
     context?: Context;
 }

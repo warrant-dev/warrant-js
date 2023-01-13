@@ -40,14 +40,20 @@ describe.skip('Live Test', function () {
 
     it('check', async function () {
         let authorized = await this.warrant.check({
-            object: this.role,
+            object: {
+                objectType: this.role.getObjectType(),
+                objectId: this.role.roleId,
+            },
             relation: "member",
             subject: this.user,
         });
         assert(authorized);
 
         authorized = await this.warrant.check({
-            object: this.role,
+            object: {
+                objectType: this.role.getObjectType(),
+                objectId: this.role.roleId,
+            },
             relation: "owner",
             subject: this.user,
         });
