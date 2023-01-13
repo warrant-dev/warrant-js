@@ -10,6 +10,7 @@ import Check, {
 } from "./types/Check";
 import Permission from "./types/Permission";
 import ApiClient from "./HttpClient";
+import { isWarrantObject } from "./types/WarrantObject";
 
 export default class WarrantClient {
     private readonly config: Config;
@@ -29,8 +30,8 @@ export default class WarrantClient {
             data: {
                 op: CheckOp.AnyOf,
                 warrants: [{
-                    objectType: check.object.getObjectType(),
-                    objectId: check.object.getObjectId(),
+                    objectType: isWarrantObject(check.object) ? check.object.getObjectType() : check.object.objectType,
+                    objectId: isWarrantObject(check.object) ? check.object.getObjectId() : check.object.objectId,
                     relation: check.relation,
                     context: check.context,
                 }],
@@ -47,8 +48,8 @@ export default class WarrantClient {
             data: {
                 op: check.op,
                 warrants: check.warrants.map((warrant: CheckWarrant) => ({
-                    objectType: warrant.object.getObjectType(),
-                    objectId: warrant.object.getObjectId(),
+                    objectType: isWarrantObject(warrant.object) ? warrant.object.getObjectType() : warrant.object.objectType,
+                    objectId: isWarrantObject(warrant.object) ? warrant.object.getObjectId() : warrant.object.objectId,
                     relation: warrant.relation,
                     context: warrant.context,
                 })),
