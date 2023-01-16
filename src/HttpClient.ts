@@ -1,5 +1,4 @@
 const PACKAGE_VERSION = require("../package.json").version;
-import Axios, { AxiosRequestConfig } from "axios";
 import ApiError from "./types/ApiError";
 
 interface HttpClient {
@@ -20,6 +19,10 @@ export interface HttpClientRequestOptions {
     url: string;
 }
 
+interface RequestHeaders {
+    [header: string]: string;
+}
+
 export default class ApiClient implements HttpClient {
     private config: HttpClientConfig;
 
@@ -28,55 +31,54 @@ export default class ApiClient implements HttpClient {
     }
 
     public async get(requestOptions: HttpClientRequestOptions): Promise<any> {
-        try {
-            const response = await Axios({
-                method: "GET",
-                ...this.buildRequestConfig(requestOptions),
-            });
-            return response.data;
-        } catch (e) {
-            throw this.buildError(e);
+        const [requestUrl, requestHeaders] = this.buildRequestUrlAndHeaders(requestOptions);
+        /* @ts-ignore */
+        const response = await fetch(requestUrl, {
+            method: "GET",
+            headers: requestHeaders,
+        });
+        if (!response.ok) {
+            throw this.buildError(response.json());
         }
+
+        return response.json();
     }
 
     public async post(requestOptions: HttpClientRequestOptions): Promise<any> {
-        try {
-            const response = await Axios({
-                method: "POST",
-                ...this.buildRequestConfig(requestOptions),
-            });
-            return response.data;
-        } catch (e) {
-            throw this.buildError(e);
+        const [requestUrl, requestHeaders] = this.buildRequestUrlAndHeaders(requestOptions);
+        /* @ts-ignore */
+        const response = await fetch(requestUrl, {
+            method: "POST",
+            headers: requestHeaders,
+            body: JSON.stringify(requestOptions.data),
+        });
+
+        if (!response.ok) {
+            throw this.buildError(response.json());
         }
+
+        return response.json();
     }
 
-    private buildRequestConfig(requestOptions?: HttpClientRequestOptions): AxiosRequestConfig {
-        const config: AxiosRequestConfig = {
-            baseURL: this.config.baseUrl,
-            headers: {
-                "User-Agent": `warrant-js/${PACKAGE_VERSION}`,
-                Authorization: `Bearer ${this.config.sessionToken}`,
-            },
-            ...requestOptions,
+    private buildRequestUrlAndHeaders(requestOptions?: HttpClientRequestOptions): [string, RequestHeaders] {
+        let baseUrl = this.config.baseUrl;
+        const headers = {
+            "User-Agent": `warrant-js/${PACKAGE_VERSION}`,
+            Authorization: `Bearer ${this.config.sessionToken}`,
         };
 
         if (requestOptions?.sessionToken) {
-            config.headers['Authorization'] = `Bearer ${requestOptions.sessionToken}`;
+            headers['Authorization'] = `Bearer ${requestOptions.sessionToken}`;
         }
 
         if (requestOptions?.baseUrl) {
-            config.baseURL = requestOptions.baseUrl;
+            baseUrl = requestOptions.baseUrl;
         }
 
-        return config;
+        return [`${baseUrl}${requestOptions.url}`, headers];
     }
 
-    private buildError(e: any): Error {
-        if (e.response) {
-            return new ApiError(e.response.data.code, e.response.data.message);
-        }
-
-        return e;
+    private buildError(errorResponse: any): Error {
+        return new ApiError(errorResponse.code, errorResponse.message);
     }
 }
