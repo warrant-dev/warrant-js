@@ -1,13 +1,8 @@
 const path = require("path");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = env => {
     return {
         entry: "./src/index.ts",
-        plugins: [
-            new CleanWebpackPlugin({cleanStaleWebpackAssets: false}),
-        ],
-
         resolve: {
             extensions: [".ts", ".tsx", ".js"]
         },
@@ -32,6 +27,7 @@ module.exports = env => {
             filename: "index.js",
             path: path.resolve(__dirname, "dist"),
             globalObject: "this",
+            clean: true,
         },
     }
 };
