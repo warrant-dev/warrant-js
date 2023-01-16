@@ -38,7 +38,7 @@ export default class ApiClient implements HttpClient {
             headers: requestHeaders,
         });
         if (!response.ok) {
-            throw this.buildError(response.json());
+            throw this.buildError(await response.json());
         }
 
         return response.json();
@@ -54,7 +54,7 @@ export default class ApiClient implements HttpClient {
         });
 
         if (!response.ok) {
-            throw this.buildError(response.json());
+            throw this.buildError(await response.json());
         }
 
         return response.json();
