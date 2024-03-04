@@ -9,6 +9,7 @@ interface HttpClient {
 export interface HttpClientConfig {
     sessionToken: string;
     baseUrl: string;
+    clientKey: string;
 }
 
 export interface HttpClientRequestOptions {
@@ -65,6 +66,7 @@ export default class ApiClient implements HttpClient {
         const headers = {
             "User-Agent": `warrant-js/${PACKAGE_VERSION}`,
             Authorization: `Bearer ${this.config.sessionToken}`,
+            "Warrant-Client-Key": this.config.clientKey,
         };
 
         if (requestOptions?.sessionToken) {
