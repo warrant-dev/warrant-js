@@ -21,6 +21,7 @@ export default class WarrantClient {
         this.httpClient = new ApiClient({
             sessionToken: this.config.sessionToken,
             baseUrl: this.config.endpoint || API_URL_BASE,
+            clientKey: this.config.clientKey,
         });
     }
 
