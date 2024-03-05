@@ -1,6 +1,6 @@
 {
     "name": "@warrantdev/warrant-js",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "description": "JavaScript Library to Use Warrant in Client Applications",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
