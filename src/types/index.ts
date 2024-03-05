@@ -15,4 +15,4 @@ export { default as PricingTier } from "./PricingTier";
 export { default as Role } from "./Role";
 export { default as Tenant } from "./Tenant";
 export { default as User } from "./User";
-export { default as WarrantObject } from "./WarrantObject";
+export { default as WarrantObject, WarrantObjectLiteral, isWarrantObject } from "./WarrantObject";
